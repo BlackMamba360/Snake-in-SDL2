@@ -79,15 +79,19 @@ void GameObject::handleInput() {
     if (event.type == SDL_QUIT) { is_running = false; }
     if (event.type == SDL_KEYDOWN) {
       switch (event.key.keysym.sym) {
+        case SDLK_w:
         case SDLK_UP:
           snake->turn(SK_NORTH);
         break;
+        case SDLK_s:
         case SDLK_DOWN:
           snake->turn(SK_SOUTH);
         break;
+        case SDLK_a:
         case SDLK_LEFT:
           snake->turn(SK_WEST);
         break;
+        case SDLK_d:
         case SDLK_RIGHT:
           snake->turn(SK_EAST);
         break;

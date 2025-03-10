@@ -3,7 +3,7 @@
 #include <vector>
 #include "config.h"
 
-constexpr unsigned int InitSnakeTailSize = 12;
+constexpr unsigned int InitSnakeTailSize = 10;
 
 enum SK_Direction {
   SK_NORTH = 0x1,

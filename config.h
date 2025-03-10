@@ -2,7 +2,7 @@
 
 #include <cstdint> // for uint8_t
 
-constexpr std::uint32_t DELAY_IN_MILLISECONDS = 90;
+constexpr std::uint32_t DELAY_IN_MILLISECONDS = 95;
 
 struct RGBA_Color {
   std::uint8_t r, g, b, a;

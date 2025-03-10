@@ -50,14 +50,19 @@ void Snake::extend() {
 }
 
 void Snake::turn(SK_Direction new_direction) {
-  if (
-    (direction == SK_SOUTH && new_direction == SK_NORTH) ||
-    (direction == SK_NORTH && new_direction == SK_SOUTH) ||
-    (direction == SK_EAST  && new_direction == SK_WEST) ||
-    (direction == SK_WEST  && new_direction == SK_EAST)) {
-    return;
-    }
-  direction = new_direction;
+  switch (direction) {
+    case SK_NORTH:
+    case SK_SOUTH:
+      if (new_direction == SK_WEST || new_direction == SK_EAST) {
+        direction = new_direction;
+      }
+    break;
+    case SK_WEST:
+    case SK_EAST:
+      if (new_direction == SK_NORTH || new_direction == SK_SOUTH) {
+        direction = new_direction;
+      }
+  }
 }
 
 void Snake::update() {

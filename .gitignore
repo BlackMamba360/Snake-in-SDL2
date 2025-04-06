@@ -1,5 +1,9 @@
 # ignore folder
 cmake-build-debug
+.idea
+
+# ignore cmake
+CMakeLists.txt
 
 # Prerequisites
 *.d

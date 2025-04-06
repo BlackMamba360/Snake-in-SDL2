@@ -23,7 +23,7 @@ class Snake {
   void checkSelfCollision();
 public:
   Snake();
-  ~Snake();
+  ~Snake() = default;
 
   void turn(SK_Direction new_direction);
   void truncate();

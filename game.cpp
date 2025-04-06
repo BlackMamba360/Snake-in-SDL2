@@ -7,15 +7,18 @@ std::default_random_engine GameObject::gen(rd());
 std::uniform_int_distribution<> GameObject::wdis(0, GRID_WIDTH - 1);
 std::uniform_int_distribution<> GameObject::hdis(0, GRID_HEIGHT - 1);
 
-GameObject::GameObject(): consumable({}), is_running(true) {
+void GameObject::Deleter::operator()(GameObject *game) const {
+  delete game;
+}
+
+std::unique_ptr<GameObject, GameObject::Deleter> GameObject::init() {
   /* initialize SDL */
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
-    exit(1);
+    return nullptr;
   }
 
   /* create game window */
-  window = SDL_CreateWindow(
+  auto window = SDL_CreateWindow(
     "Snake Game",
     SDL_WINDOWPOS_CENTERED,
     SDL_WINDOWPOS_CENTERED,
@@ -24,26 +27,25 @@ GameObject::GameObject(): consumable({}), is_running(true) {
     SDL_WINDOW_SHOWN);
 
   if (window == nullptr) {
-    std::cerr << "Failed to create window: " << SDL_GetError() << std::endl;
     SDL_Quit();
-    exit(1);
+    return nullptr;
   }
 
   /* create renderer */
-  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  auto renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
   if (renderer == nullptr) {
-    std::cerr << "Failed to create renderer: " << SDL_GetError() << std::endl;
     SDL_DestroyWindow(window);
     SDL_Quit();
-    exit(1);
+    return nullptr;
   }
 
-  snake = std::make_unique<Snake>();
+  return std::unique_ptr<GameObject, Deleter>(new GameObject(window, renderer));
+}
 
+GameObject::GameObject(SDL_Window *win, SDL_Renderer *ren)
+: window(win), renderer(ren), snake(std::make_shared<Snake>()), consumable(), is_running(true) {
   generateConsumable();
-
-  std::cout << "Successfully initialized GameObject\n";
 }
 
 GameObject::~GameObject() {
@@ -51,8 +53,6 @@ GameObject::~GameObject() {
   SDL_DestroyWindow(window);
   SDL_Quit();
   snake.reset();
-
-  std::cout << "Successfully destroyed GameObject\n";
 }
 
 void GameObject::generateConsumable() {
@@ -134,6 +134,14 @@ void GameObject::prepareScreen() const {
 
 void GameObject::presentScreen() const {
   SDL_RenderPresent(renderer);
+}
+
+std::shared_ptr<Snake> GameObject::getSnake() const {
+  return {snake};
+}
+
+bool GameObject::isRunning() const {
+  return is_running;
 }
 
 void GameObject::drawTile(int x, int y) const {

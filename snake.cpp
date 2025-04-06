@@ -15,11 +15,7 @@ Snake::Snake(): is_alive(true) {
   do {
     extend();
   } while (--i > 0);
-
-  std::cout << "Snake created\n";
 }
-
-Snake::~Snake() { std::cout << "Snake destroyed\n"; }
 
 const std::vector<Tile> &Snake::getBody() const { return body; }
 

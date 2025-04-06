@@ -9,12 +9,19 @@
 using std::cout, std::endl;
 
 int main() {
-  auto game = std::make_unique<GameObject>();
+  auto game = GameObject::init();
 
-  while (game->is_running) {
+  if (game == nullptr) {
+    cout << "Failed to initialize GameObject: " << SDL_GetError() << endl;
+    return 1;
+  }
+
+  auto snake = game->getSnake();
+
+  while (game->isRunning()) {
     game->handleInput();
 
-    game->snake->update();
+    snake->update();
 
     game->checkSnakeConsumableCollision();
 
@@ -32,8 +39,8 @@ int main() {
   }
 
   cout << "|------------------- GAME OVER -------------------|" << endl;
-  cout << "| Highscore: " << game->snake->getBody().size() - InitSnakeTailSize << endl;
-  cout << "| Final Snake Size: " << game->snake->getBody().size() << endl;
+  cout << "| Highscore: " << snake->getBody().size() - InitSnakeTailSize << endl;
+  cout << "| Final Snake Size: " << snake->getBody().size() << endl;
   cout << "|-------------------------------------------------|" << endl;
 
   return 0;
